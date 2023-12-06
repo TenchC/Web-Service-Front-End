@@ -8,7 +8,7 @@ let data = {
   vibe: "str",
 };
 
-let vibes = ['intense','reserved','mysterious','bubbly','kind','calm'];
+let vibes = ["intense", "reserved", "mysterious", "bubbly", "kind", "calm"];
 
 let pageWidth = document.body.scrollWidth;
 let pageHeight = document.body.scrollHeight;
@@ -32,12 +32,16 @@ const getData = async function (input) {
     const response = await fetch(`${baseURL}${input}`);
     const responseJSON = await response.json();
     console.log(responseJSON);
-    data.name = responseJSON.name
+    data.name = responseJSON.name;
     data.name = data.name.substring(1);
-    data.luck = responseJSON.luck
-    data.primary = responseJSON.primaryColor
-    data.secondary = responseJSON.secondaryColor
-    console.log(data)
+    data.luck = Number(responseJSON.luck);
+    data.primary = responseJSON.primaryColor;
+    data.secondary = responseJSON.secondaryColor;
+    data.vibe = responseJSON.vibe;
+    console.log(responseJSON);
+    changeColor(data.primary, data.secondary);
+    resizeDivs();
+    fillShapes(data.vibe, data.name, data.luck);
   } catch (error) {
     console.error(error);
   }
@@ -47,16 +51,15 @@ const getData = async function (input) {
 function handleFormSubmit() {
   // Get the input value
   var userInput = document.getElementById("userInput").value;
-  data.name = userInput
-  //need Eloise to change CORS permissions, so added in default stuff
+  data.name = userInput;
   getData(userInput);
-  generateFakeData();
+  console.log(data);
   alert("Generating Vibe of... " + userInput);
 }
 
 //change position of the vibes
 function resizeDivs() {
-    i = 0
+  i = 0;
   for (e of document.getElementsByClassName("random-div")) {
     let width = randomInt(100, 400);
     let height = randomInt(100, 350);
@@ -120,43 +123,16 @@ function changeColor(color1, color2) {
   info_div.style.setProperty("color", color2);
 }
 
-function fillShapes(vibe, name, luck){
-    for(e of text_divs){
-        e.innerHTML = ''
-        //% chance based on luck, 10 = 100% chance, 1 luck = 10%
-        if(Math.random() > ((1/luck)+.1)){
-            if(Math.random()<.5){
-        e.innerHTML = vibe
-        } else {
-            e.innerHTML = name
-        }
+function fillShapes(vibe, name, luck) {
+  for (e of text_divs) {
+    e.innerHTML = "";
+    //% chance based on luck, 1 = 100% chance, 10 luck = 10%
+    if (Math.random()*10 > luck) {
+      if (Math.random() < 0.33) {
+        e.innerHTML = vibe;
+      } else {
+        e.innerHTML = name;
+      }
     }
+  }
 }
-}
-
-//function just for until Eloise does the things
-function generateFakeData() {
-  data.primary =
-    "rgb(" +
-    randomInt(0, 255) +
-    "," +
-    randomInt(0, 255) +
-    "," +
-    randomInt(0, 255) +
-    ")";
-  data.secondary =
-    "rgb(" +
-    randomInt(0, 255) +
-    "," +
-    randomInt(0, 255) +
-    "," +
-    randomInt(0, 255) +
-    ")";
-  resizeDivs();
-  data.vibe = (vibes[randomInt(0, vibes.length)])
-  data.luck = randomInt(0, 10);
-  //would input user data
-  changeColor(data.primary, data.secondary);
-fillShapes(data.vibe, data.name, data.luck)
-}
-
