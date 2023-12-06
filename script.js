@@ -2,8 +2,8 @@ const baseURL = "https://name-color-vibes.onrender.com/name/:";
 
 let data = {
   name: "str",
-  primary: "hsl str",
-  secondary: "hsl str",
+  primary: "rgb str",
+  secondary: "rgb str",
   luck: "number",
   vibe: "str",
 };
@@ -36,7 +36,10 @@ const getData = async function (input) {
     data.name = data.name.substring(1);
     data.luck = Number(responseJSON.luck);
     data.primary = responseJSON.primaryColor;
-    data.secondary = responseJSON.secondaryColor;
+    data.secondary = "rgb(" +
+    randomInt(0, 255) + "," +
+    randomInt(0, 255) + "," +
+    randomInt(0, 255) + ")";
     data.vibe = responseJSON.vibe;
     console.log(responseJSON);
     changeColor(data.primary, data.secondary);
@@ -54,7 +57,6 @@ function handleFormSubmit() {
   data.name = userInput;
   getData(userInput);
   console.log(data);
-  alert("Generating Vibe of... " + userInput);
 }
 
 //change position of the vibes
@@ -121,6 +123,7 @@ function changeColor(color1, color2) {
   //change info colors
   info_div.style.setProperty("background-color", color1);
   info_div.style.setProperty("color", color2);
+  
 }
 
 function fillShapes(vibe, name, luck) {
